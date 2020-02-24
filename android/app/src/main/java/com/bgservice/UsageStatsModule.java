@@ -120,7 +120,7 @@ public class UsageStatsModule extends ReactContextBaseJavaModule {
     return usageStatsList;
   }
 
-  public static Map<String, UsageStats> getAggregateStatsMap(Context context, int durationInDays){
+  public static Map<String, UsageStats> getAggregateStatsMap(Context context, String startTimeString, String endTimeString){
     UsageStatsManager usm = getUsageStatsManager(context);
     // Calendar calendar = Calendar.getInstance();
     // long endTime = calendar.getTimeInMillis();
@@ -130,10 +130,11 @@ public class UsageStatsModule extends ReactContextBaseJavaModule {
     PackageManager packageManager = context.getPackageManager();
     ApplicationInfo applicationInfo;
 
-    List dates = getDates(durationInDays);
-    long startTime = (long)dates.get(0);
-    long endTime = (long)dates.get(1);
-
+    // List dates = getDates(1);
+    // long startTime = (long)dates.get(0);
+    // long endTime = (long)dates.get(1);
+    long startTime = Long.parseLong(startTimeString);
+    long endTime = Long.parseLong(endTimeString);
     Map<String, UsageStats> aggregateStatsMap = usm.queryAndAggregateUsageStats(startTime, endTime);
     Map<String, UsageStats> statsMap = new HashMap<String, UsageStats>(); 
     
@@ -207,11 +208,12 @@ public class UsageStatsModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void getStats(
-    int durationInDays,
+    String startTime,
+    String endTime,
     Callback successCallback) {
-      if (durationInDays > 0) {
+      // if (startTime > 0 && endTime > 0) {
         try {
-          WritableMap data = getStatsString(getAggregateStatsMap(getReactApplicationContext(), durationInDays));
+          WritableMap data = getStatsString(getAggregateStatsMap(getReactApplicationContext(), startTime, endTime));
 
           // List dates = getDates(durationInDays);
 
@@ -220,10 +222,10 @@ public class UsageStatsModule extends ReactContextBaseJavaModule {
           String errorMessage = e.getMessage();
           Toast.makeText(getReactApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
         }
-      } else {
-        String noticeMessage = "Enter an integer greater than 0!";
-        Toast.makeText(getReactApplicationContext(), noticeMessage, Toast.LENGTH_SHORT).show();
-      }
+      // } else {
+      //   String noticeMessage = "Enter an integer greater than 0!";
+      //   Toast.makeText(getReactApplicationContext(), noticeMessage, Toast.LENGTH_SHORT).show();
+      // }
     }
 
   @ReactMethod

@@ -3,9 +3,9 @@ const UsageStats = NativeModules.UsageStats;
 
 import { sortObj, miliToMin } from '../util/util';
 
-export default usageStats = () => {
+export default usageStats = (startTime, endTime) => {
   return new Promise((resolve, reject) => {
-    UsageStats.getStats(1, (res) => {
+    UsageStats.getStats(startTime.toString(), endTime.toString(), (res) => {
       let stats = {};
       let val;
       Object.keys(res).forEach(key => {

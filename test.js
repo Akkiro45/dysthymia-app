@@ -29,6 +29,8 @@ const test = async () => {
   // let r = JSON.parse(receiver);
   // r.stepCounter[0].steps = 1800
   // AsyncStorage.setItem('receiver', JSON.stringify(r));
+
+  // console.log(moment.utc(1582556720893).millisecond());
 }
 
 export default test;

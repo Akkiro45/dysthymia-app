@@ -24,10 +24,14 @@ const sendData = () => {
                     }
                     axios.post('/stats/post', body, {headers})
                       .then(res => {
-                        if(res.data.status === 'ok') {
-                          pendingData.shift();
-                          strData = JSON.stringify(pendingData);
-                          AsyncStorage.setItem('pendingData', strData);
+                        if(res) {
+                          if(res.data) {
+                            if(res.data.status === 'ok') {
+                              pendingData.shift();
+                              strData = JSON.stringify(pendingData);
+                              AsyncStorage.setItem('pendingData', strData);
+                            }
+                          }
                         }
                       })
                       .catch(err => {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ScrollView, Text, StyleSheet, BackHandler, RefreshControl } from 'react-native';
+import moment from 'moment';
 
 import ListItem from '../UI/ListItem/ListItem';
 import getUsageStats from '../../services/UsageStats';
@@ -21,7 +22,8 @@ class UsageStats extends Component {
     return true;
   }
   getData = () => {
-    getUsageStats()
+    const currTime = new Date().getTime();
+    getUsageStats(parseInt(moment(currTime).startOf('day').format('x')), currTime)
       .then(usageStats => {
         this.setState({ usageStats });
       });

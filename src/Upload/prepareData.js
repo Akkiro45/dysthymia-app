@@ -18,7 +18,7 @@ const prepareData = () => {
               let strData = '';
               if(pendingData) {
                 pendingData = JSON.parse(pendingData);
-                const usageStats = getUsageStats();
+                const usageStats = getUsageStats(time.startTime, time.endTime);
                 const callLogs = getCallLogsStats(time.startTime);
                 const receiver = AsyncStorage.getItem('receiver');
                 Promise.all([receiver, usageStats, callLogs])
