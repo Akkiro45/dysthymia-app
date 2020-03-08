@@ -23,7 +23,7 @@ class UsageStats extends Component {
   }
   getData = () => {
     const currTime = new Date().getTime();
-    getUsageStats(parseInt(moment(currTime).startOf('day').format('x')), currTime)
+    getUsageStats(parseInt(moment(currTime).startOf('day').format('x')), parseInt(moment(currTime).endOf('day').format('x')))
       .then(usageStats => {
         this.setState({ usageStats });
       });

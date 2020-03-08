@@ -11,5 +11,11 @@ export {
 export {
   auth,
   authSuccess,
-  signout
+  signout,
+  autoSignin,
+  postProfile
 } from './auth';
+
+export {
+  switchOp
+} from './switchNavigator';

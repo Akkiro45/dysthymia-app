@@ -4,11 +4,13 @@ import thunk from 'redux-thunk';
 import loadingReducer from '../store/reducers/loading';
 import errorReducer from '../store/reducers/error';
 import authReducer from '../store/reducers/auth';
+import switchNavigatorReducer from '../store/reducers/switchNavigator';
 
 const rootReducer = combineReducers({
   loading: loadingReducer,
   error: errorReducer,
-  auth: authReducer
+  auth: authReducer,
+  switchNavigator: switchNavigatorReducer
 });
 
 let composeEnhancers = compose;

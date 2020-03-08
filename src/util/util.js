@@ -1,3 +1,5 @@
+import moment from 'moment'; 
+
 export const sortObj = (obj, type) => {
   const keysSorted = Object.keys(obj).sort(function(a,b){
     if(type === 'desc')
@@ -25,4 +27,64 @@ export const updateObject = (oldObject, updatedproperties) => {
       ...oldObject,
       ...updatedproperties
   }
+}
+
+export const capitalize = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export const getDateFormate1 = (date) => {
+  // Tuesday, 03 March
+  return moment(date).format('dddd, DD MMMM');
+}
+
+export const tranformTime = (time) => {
+  let res = {};
+  if(time < 1000) {
+    res.time = 0;
+    res.type = 'Seconds';
+  } else if(time < 60000) {
+    res.time = Math.trunc(time / 1000);
+    res.type = 'Seconds';
+  } else if(time < 3600000) {
+    res.time = Math.trunc((time / 60000));
+    res.type = 'Miniutes';
+  } else {
+    // res.time = (time / (1000 * 60 * 60)).toFixed(1);
+    const min = miliToMin(time);
+    res.time = Math.trunc(min / 60) + ':' + (min % 60);
+    res.type = 'Hours';
+  }
+  return res;
+}
+
+export const minToTime = (time) => {
+  const hour = Math.trunc(time / 60);
+  const min = time % 60;
+  return (hour + 'hrs ' + min + 'min'); 
+}
+
+export const calcDistance = (steps, height) => {
+  // in km
+  const inchs = height * 12; 
+  let strideLength = inchs * 0.413;
+  strideLength = strideLength * 2.54; 
+  return ((steps * strideLength) / 100000).toFixed(2);
+}
+
+export const calcCalories = (steps, weight, height) => {
+  const miles = calcDistance(steps, height) / 1.609;
+  const weightInLbs = weight * 2.205;
+  const calPerMiles = weightInLbs * 0.57;
+  return Math.trunc(calPerMiles * miles);
+}
+
+export const convHeightStrToFootInt = (height) => {
+  let inch = '0';
+  if(height.length === 9) {
+    inch = height.substring(4, 5);
+  } else if(height.length === 10) {
+    inch = height.substring(4, 6);
+  }
+  return parseFloat(height[0] + '.' + inch);
 }

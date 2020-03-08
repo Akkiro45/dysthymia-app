@@ -194,7 +194,9 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
     // implementation 'com.android.support:support-v4:+'
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
-
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
+    
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
         debugImplementation files(hermesPath + "hermes-debug.aar")

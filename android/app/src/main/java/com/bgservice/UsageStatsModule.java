@@ -13,6 +13,8 @@ import android.app.usage.UsageEvents;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.content.pm.PackageInfo; 
+import android.graphics.drawable.Drawable;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.Intent;
@@ -29,6 +31,8 @@ import java.util.ArrayList;
 import android.os.Bundle;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.Arguments;
+
+// import com.bgservice.Utility;
 
 public class UsageStatsModule extends ReactContextBaseJavaModule {
 
@@ -234,4 +238,37 @@ public class UsageStatsModule extends ReactContextBaseJavaModule {
       String test = "It works!";
       Toast.makeText(getReactApplicationContext(), test, duration).show();
     }
+
+  @ReactMethod
+  public void getAppsIcon(String appNames, Callback successCallback) {
+    // Log.d("MyTag", appNames);
+    String arr[] = appNames.split(",");
+    int appsReq = arr.length;
+    // for(int i=0;i<arr.length;i++) {
+    //   Log.d("MyTag", arr[i]);
+    // }
+    String appName = "";
+    try {
+      WritableMap list = Arguments.createMap();
+      PackageManager pm = getReactApplicationContext().getPackageManager();
+      List<PackageInfo> pList = pm.getInstalledPackages(0);
+      for (int i = 0; i < pList.size(); i++) {
+        PackageInfo packageInfo = pList.get(i);
+        appName = ((String) packageInfo.applicationInfo.loadLabel(pm)).trim();
+        for(int k=0;k<arr.length;k++) {
+          if(arr[k].equals(appName)) {
+            appsReq -= 1;
+            Drawable icon = pm.getApplicationIcon(packageInfo.applicationInfo);
+            list.putString(appName, Utility.convert(icon));
+          }
+        }
+        if(appsReq == 0) {
+          break;
+        }
+      }
+      successCallback.invoke(list);
+    } catch(Exception e) {
+      successCallback.invoke(e);
+    }
+  }
 }

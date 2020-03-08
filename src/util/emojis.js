@@ -1,0 +1,2 @@
+const emojiList = ['ghost','angel','alien','imp','skull', 'japanese_ogre','japanese_goblin', 'man','woman','prince','princess', 'male-technologist','female-technologist', 'boy','girl','bear','panda_face','mouse','rabbit','cat','monkey_face','dog','pig','hamster','wolf', 'koala', 'penguin', 'fox_face', 'unicorn_face', 'tiger', 'lion_face', 'relaxed', 'clown_face', 'face_with_cowboy_hat', 'robot_face', 'nerd_face', 'smile_cat', 'sunglasses', 'slightly_smiling_face', 'innocent', 'smiling_imp']
+export default emojiList;

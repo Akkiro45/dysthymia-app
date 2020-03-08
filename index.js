@@ -1,23 +1,18 @@
-/**
- * @format
- */
-
-import { AppRegistry, NativeModules, DeviceEventEmitter } from 'react-native';
+import React from 'react';
+import { AppRegistry, NativeModules, DeviceEventEmitter, StatusBar } from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
 import RNAndroidNotificationListener from 'react-native-android-notification-listener';
+import { Provider } from 'react-redux';
 
+import store from './src/store/configStore';
 import BroadcastService from './src/services/BroadcastService';
 import NotificationListener, { NotificationRemoved } from './src/services/NotificationListener';
 import { subscribeActivityRecognition } from './src/services/ActivityRecognition';
 import MyHeadlessTask from './src/Upload/upload';
 import { lightSensor, stepCounter } from './src/services/Sensors';
+import { PURPLE } from './src/util/color';
 import test from './test';
-
-
-// const MyHeadlessTask = async () => {
-//   // console.log('Service got called!');
-// }
 
 // Sensors
 const stepsIntervalInMiliSec = 600000;
@@ -52,4 +47,17 @@ subscribeActivityRecognition();
 
 AppRegistry.registerHeadlessTask('BroadcastService', () => BroadcastService);
 AppRegistry.registerHeadlessTask('Heartbeat', () => MyHeadlessTask);
-AppRegistry.registerComponent(appName, () => App);
+
+const AppContainer = () => {
+  return (
+    <Provider store={store()} >
+      <StatusBar 
+        backgroundColor={PURPLE}
+        barStyle='light-content'
+      />
+      <App />
+    </Provider>
+  );
+}
+
+AppRegistry.registerComponent(appName, () => AppContainer);

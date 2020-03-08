@@ -6,3 +6,5 @@ export const RESET_ERROR = 'RESET_ERROR';
 
 export const AUTH_SUCCESS = 'AUTH_SUCCESS';
 export const SIGNOUT = 'SIGNOUT';
+
+export const SWITCH_OP = 'SWITCH_OP';

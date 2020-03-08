@@ -56,7 +56,7 @@ class Home extends Component {
           if(receiver.unlocks.length > 0) {
             unlockCount = receiver.unlocks[receiver.unlocks.length - 1].count;
           }
-          if(receiver.unlocks.length > 0) {
+          if(receiver.stepCounter.length > 0) {
             steps = receiver.stepCounter[receiver.stepCounter.length - 1].steps;
           }
           if(receiver.screenOnTime.length > 0) {
@@ -88,7 +88,8 @@ class Home extends Component {
             onRefresh={this.onRefresh} 
             colors={colors} />
         }>
-        <Text style={style.title} >Dysthymia</Text>
+        {/* <Text style={style.title} >Dysthymia</Text> */}
+        <Text style={[style.title, { fontFamily: 'Rubik-Regular' }]} >Dysthymia</Text>
         <View style={style.buttonContainer} >
           <View style={style.button} >
             <Button onPress={() => Heartbeat.startService()} title='Start Service' />
@@ -97,11 +98,11 @@ class Home extends Component {
             <Button onPress={() => Heartbeat.stopService()} title='Stop Service' />
           </View>
         </View>
-        <View style={style.buttonContainer} >
+        {/* <View style={style.buttonContainer} >
           <View style={style.button} >
             <Button onPress={this.onSignoutHandler} title='Logout' />
           </View>
-        </View>
+        </View> */}
         <Box 
           borderColor={getColor()}
           title='Activity'

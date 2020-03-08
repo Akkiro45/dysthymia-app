@@ -2,3 +2,17 @@ export const colors = ['#ef5350', '#ec407a', '#ab47bc', '#7e57c2', '#5c6bc0', '#
 export const getColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
 }
+
+export const PURPLE = '#8b63e6';
+export const BLUE = '#6055cd';
+export const LIGHT_PURPLE = '#ebebeb';
+export const GRAY1 = '#ccc';
+export const GRAY2 = '#eee';
+export const DANGER = '#ff0000';
+
+// Charts Color
+export const RED_CHART = '#c70039';
+export const GREEN_CHART = '#44cd40';
+export const BLUE_CHART = '#404fcd';
+export const YELLOW_CHART = '#ebd22f';
+export const PURPLE_CHART = '#c200fb';
