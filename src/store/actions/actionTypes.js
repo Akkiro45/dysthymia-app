@@ -8,3 +8,9 @@ export const AUTH_SUCCESS = 'AUTH_SUCCESS';
 export const SIGNOUT = 'SIGNOUT';
 
 export const SWITCH_OP = 'SWITCH_OP';
+export const RESET_SWITCH = 'RESET_SWITCH';
+
+export const FETCHED_STATS_DONE = 'FETCHED_STATS_DONE';
+export const CLEAN_STATS = 'CLEAN_STATS';
+
+export const SET_SCORE = 'SET_SCORE';

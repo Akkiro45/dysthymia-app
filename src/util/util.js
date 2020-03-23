@@ -21,6 +21,9 @@ export const miliToMin = (mili) => {
 export const secToMin = (sec) => {
   return Math.trunc(sec / 60);
 } 
+export const secToMinRound = (sec) => {
+  return Math.round(sec / 60);
+}
 
 export const updateObject = (oldObject, updatedproperties) => {
   return {
@@ -31,6 +34,10 @@ export const updateObject = (oldObject, updatedproperties) => {
 
 export const capitalize = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export const capitalizeFirstChar = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
 export const getDateFormate1 = (date) => {
@@ -58,10 +65,28 @@ export const tranformTime = (time) => {
   return res;
 }
 
+export const miliToTime = (time) => {
+  return minToTime(miliToMin(time));
+}
+
 export const minToTime = (time) => {
   const hour = Math.trunc(time / 60);
   const min = time % 60;
   return (hour + 'hrs ' + min + 'min'); 
+}
+
+export const minToTimePerfect = (time) => {
+  const hour = Math.trunc(time / 60);
+  const min = time % 60;
+  if(hour === 0) {
+    return (min + 'min');
+  } else {
+    return (hour + 'hrs ' + min + 'min'); 
+  }
+}
+
+export const miliToHoure = (time) => {
+  return parseFloat((time / (1000 * 60 * 60)).toFixed(1));
 }
 
 export const calcDistance = (steps, height) => {
@@ -87,4 +112,13 @@ export const convHeightStrToFootInt = (height) => {
     inch = height.substring(4, 6);
   }
   return parseFloat(height[0] + '.' + inch);
+}
+
+export const kRespresentedStr = (val) => {
+  val = val.toString();
+  if(val.length > 3) {
+    return (val.slice(0, val.length - 3) + ',' + val.slice(val.length - 3));
+  } else {
+    return val;
+  }
 }

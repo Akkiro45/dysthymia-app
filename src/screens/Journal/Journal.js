@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { NativeModules } from 'react-native';
 const UsageStats = NativeModules.UsageStats;
 
+import Heartbeat from '../../../Heartbeat';
 import getCallLogsStats from '../../services/CallLogs';
 import getUsageStats from '../../services/UsageStats';
 
@@ -22,21 +23,77 @@ class Journal extends Component {
   state = {
     refreshing: false,
     calls: null,
+    callsStats: null,
     unlocks: null,
     notifications: null,
     steps: null,
     screenOnTime: null,
     screenOnTimeType: '',
+    screenOnTimeMilis: null,
     appUsage: null,
+    appUsageStats: null,
     appIcon: null,
     activities: null
   }
   componentDidMount() {
+    // Heartbeat.startService();
     this.getStats();
     // this.props.navigation.popToTop();
   }
   onRefresh = () => {
     this.getStats();
+  }
+  showDetails = (type) => {
+    let route = {
+      initialData: {
+        date: moment().format('DD/MM/YY')
+      }
+    };
+    let go = false;
+    if(type === 'Unlocks') {
+      if(this.state.unlocks) {
+        route.initialData.count = this.state.unlocks;
+        go = true;
+      }
+    } else if(type === 'Notifications') {
+      if(this.state.notifications) {
+        route.initialData.count = this.state.notifications;
+        go = true;
+      }
+    } else if(type === 'ScreenOnTime') {
+      if(this.state.screenOnTime) {
+        route.initialData.time = this.state.screenOnTimeMilis;
+        go = true;
+      }
+    } else if(type === 'CallLogs') {
+      if(this.state.callsStats) {
+        route.initialData.stats = this.state.callsStats;
+        go = true;
+      }
+    } else if(type === 'Steps') {
+      if(this.state.steps) {
+        route.initialData.steps = this.state.steps;
+        route.initialData.weight = this.props.profile.profile.weight;
+        route.initialData.height = this.props.profile.profile.height;
+        go = true;
+      }
+    } else if(type === 'Activities') {
+      if(this.state.activities) {
+        route.initialData.stats = {
+          activities: this.state.activities
+        }
+        go = true;
+      }
+    } else if(type === 'AppUsage') {
+      if(this.state.appUsageStats) {
+        route.initialData.stats = this.state.appUsageStats;
+        go = true;
+      }
+    }
+
+    if(go) {
+      this.props.navigation.navigate(type, route);
+    }
   }
   getIcon = (appName) => {
     const arr = [appName];
@@ -57,12 +114,15 @@ class Journal extends Component {
     Promise.all([receiver, usageStats, callLogs])
       .then(res => {
         let calls = 0;
+        let callsStats = null;
         let unlocks = 0;
         let notifications = 0;
         let steps = 0;
         let screenOnTime = 0;
         let screenOnTimeType = '';
+        let screenOnTimeMilis = 0;
         let appUsage = null;
+        let appUsageStats = null;
         let appIcon = null;
         let activities = null;
         if(res) {
@@ -80,7 +140,8 @@ class Journal extends Component {
                 steps = receiver.stepCounter[receiver.stepCounter.length - 1].steps;
               }
               if(receiver.screenOnTime.length > 0) {
-                const t = tranformTime(receiver.screenOnTime[receiver.screenOnTime.length - 1].time);
+                screenOnTimeMilis = receiver.screenOnTime[receiver.screenOnTime.length - 1].time;
+                const t = tranformTime(screenOnTimeMilis);
                 screenOnTimeType = t.type;
                 screenOnTime = t.time;
               }
@@ -104,6 +165,7 @@ class Journal extends Component {
 
             
             if(res[1]) {
+              appUsageStats = res[1];
               let name = null;
               let time = 0;
               Object.keys(res[1]).forEach(key => {
@@ -118,18 +180,19 @@ class Journal extends Component {
             }
 
             if(res[2]) {
-              calls = res[2].incoming + res[2].outgoing;
+              calls = res[2].incoming + res[2].outgoing + res[2].missed;
+              callsStats = res[2];
             }
             
             
-            this.setState({ activities, calls, unlocks, notifications, steps, screenOnTime, screenOnTimeType, appIcon, appUsage });
+            this.setState({ activities, appUsageStats, calls, callsStats, unlocks, notifications, steps, screenOnTime, screenOnTimeMilis, screenOnTimeType, appIcon, appUsage });
           } catch(e) {
             // setState
-            this.setState({ activities, calls, unlocks, notifications, steps, screenOnTime, screenOnTimeType, appIcon, appUsage });
+            this.setState({ activities, appUsageStats, calls, callsStats, unlocks, notifications, steps, screenOnTime, screenOnTimeMilis, screenOnTimeType, appIcon, appUsage });
             console.log(e);
           }
         } else {
-          this.setState({ activities, calls, unlocks, notifications, steps, screenOnTime, screenOnTimeType, appIcon, appUsage });
+          this.setState({ activities, appUsageStats, calls, callsStats, unlocks, notifications, steps, screenOnTime, screenOnTimeMilis, screenOnTimeType, appIcon, appUsage });
           // setState
         }
       })
@@ -138,81 +201,86 @@ class Journal extends Component {
       });
   }
   render() {
-    return (
-      <ScrollView style={{ backgroundColor: '#fff' }} 
-        refreshControl={
-          <RefreshControl 
-            refreshing={this.state.refreshing} 
-            onRefresh={this.onRefresh} 
-            colors={[PURPLE]} />
-        }
-      >
-        <View style={style.header} >
-          <View style={style.status} >
-            <Text 
-              text={'Hi, ' + capitalize(this.props.profile.userName) + '!'} 
-              type='h3'
-              style={{ textAlign: 'left', fontFamily: 'Rubik-Medium', marginBottom: 5 }}
-              numberOfLines={1}
-            />
-            <Text 
-              text={getDateFormate1(new Date())} 
-              type='h5'
-              style={{ textAlign: 'left', fontFamily: 'Rubik-Light', fontSize: 18 }}
-              numberOfLines={1}
-            />
+    if(this.props.profile) {
+      return (
+        <ScrollView style={{ backgroundColor: '#fff' }} 
+          refreshControl={
+            <RefreshControl 
+              refreshing={this.state.refreshing} 
+              onRefresh={this.onRefresh} 
+              colors={[PURPLE]} />
+          }
+        >
+          <View style={style.header} >
+            <View style={style.status} >
+              <Text 
+                text={'Hi, ' + capitalize(this.props.profile.userName) + '!'} 
+                type='h3'
+                style={{ textAlign: 'left', fontFamily: 'Rubik-Medium', marginBottom: 5 }}
+                numberOfLines={1}
+              />
+              <Text 
+                text={getDateFormate1(new Date())} 
+                type='h5'
+                style={{ textAlign: 'left', fontFamily: 'Rubik-Light', fontSize: 18 }}
+                numberOfLines={1}
+              />
+            </View>
+            <View style={style.icon} >
+              <Emoji name={this.props.profile.profile.profileEmoji} style={{fontSize: 50}} />
+            </View>
           </View>
-          <View style={style.icon} >
-            <Emoji name={this.props.profile.profile.profileEmoji} style={{fontSize: 50}} />
+  
+          <Activity activities={this.state.activities} onPress={() => this.showDetails('Activities')} />
+  
+          <View style={style.cards} >
+            <Card data={this.state.appIcon !== null ? true : false} left title='App Usage' label={this.state.appUsage} onPress={() => this.showDetails('AppUsage')} >
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
+                {this.state.appIcon ? (
+                  <Image source={{ uri: `data:image/png;base64,${this.state.appIcon}` }} style={{ height: 50, width: 50 }} />
+                ) : null}
+              </View>
+            </Card>
+            <Card data={this.state.unlocks !== null ? true : false} title='Unlock Counter' label='Unlocks' onPress={() => this.showDetails('Unlocks')} >
+              <View style={style.value} >
+                <Text text={this.state.unlocks} type='h1' numberOfLines={1} />
+              </View>
+            </Card>
           </View>
-        </View>
-
-        <Activity activities={this.state.activities} />
-
-        <View style={style.cards} >
-          <Card data={this.state.appIcon !== null ? true : false} left title='App Usage' label={this.state.appUsage} >
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
-              {this.state.appIcon ? (
-                <Image source={{ uri: `data:image/png;base64,${this.state.appIcon}` }} style={{ height: 50, width: 50 }} />
-              ) : null}
-            </View>
-          </Card>
-          <Card data={this.state.unlocks !== null ? true : false} title='Unlock Counter' label='Unlocks'>
-            <View style={style.value} >
-              <Text text={this.state.unlocks} type='h1' numberOfLines={1} />
-            </View>
-          </Card>
-        </View>
-        <View style={style.cards} >
-          <Card data={this.state.notifications !== null ? true : false} left title='Notification Counter' label='Notifications'>
-            <View style={style.value} >
-              <Text text={this.state.notifications} type='h1' numberOfLines={1} />
-            </View>
-          </Card>
-          <Card data={this.state.calls !== null ? true : false} title='Call Logs' label='Calls'>
-            <View style={style.value} >
-              <Text text={this.state.calls} type='h1' numberOfLines={1} />
-            </View>
-          </Card>
-        </View>
-        <View style={style.cards} >
-          <Card data={this.state.steps !== null ? true : false} left title='Step Counter' label='Steps'>
-            <View style={style.value} >
-              <Text text={this.state.steps} type='h1' numberOfLines={1} />
-            </View>
-          </Card>
-          <Card data={this.state.screenOnTime !== null ? true : false} title='Screen On Time' label={this.state.screenOnTimeType}>
-            <View style={style.value} >
-              <Text text={this.state.screenOnTime} type='h1' numberOfLines={1} />
-            </View>
-          </Card>
-        </View>
-        <Workout data={this.state.steps !== null ? true : false} 
-          cal={calcCalories(this.state.steps, this.props.profile.profile.weight, this.props.profile.profile.height)} 
-          km={calcDistance(this.state.steps, this.props.profile.profile.height)} 
-        />
-      </ScrollView>
-    );
+          <View style={style.cards} >
+            <Card data={this.state.notifications !== null ? true : false} left title='Notification Counter' label='Notifications' onPress={() => this.showDetails('Notifications')} >
+              <View style={style.value} >
+                <Text text={this.state.notifications} type='h1' numberOfLines={1} />
+              </View>
+            </Card>
+            <Card data={this.state.calls !== null ? true : false} title='Call Logs' label='Calls' onPress={() => this.showDetails('CallLogs')} >
+              <View style={style.value} >
+                <Text text={this.state.calls} type='h1' numberOfLines={1} />
+              </View>
+            </Card>
+          </View>
+          <View style={style.cards} >
+            <Card data={this.state.steps !== null ? true : false} left title='Step Counter' label='Steps' onPress={() => this.showDetails('Steps')} >
+              <View style={style.value} >
+                <Text text={this.state.steps} type='h1' numberOfLines={1} />
+              </View>
+            </Card>
+            <Card data={this.state.screenOnTime !== null ? true : false} title='Screen On Time' label={this.state.screenOnTimeType} onPress={() => this.showDetails('ScreenOnTime')} >
+              <View style={style.value} >
+                <Text text={this.state.screenOnTime} type='h1' numberOfLines={1} />
+              </View>
+            </Card>
+          </View>
+          <Workout data={this.state.steps !== null ? true : false} 
+            cal={calcCalories(this.state.steps, this.props.profile.profile.weight, this.props.profile.profile.height)} 
+            km={calcDistance(this.state.steps, this.props.profile.profile.height)} 
+            onPress={() => this.showDetails('Steps')}
+          />
+        </ScrollView>
+      );
+    } else {
+      return null;
+    }
   }
 }
 

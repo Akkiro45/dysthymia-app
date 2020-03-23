@@ -6,6 +6,8 @@ const UsageStats = NativeModules.UsageStats;
 
 import { getObjByDate, generateLightData, generateActivityData, generateKeysByHalfHoure } from './src/Upload/util';
 
+import getScore from './src/Upload/getScore';
+
 const test = async () => {
   // const time = await AsyncStorage.getItem('auth');
   // const pendingData = await AsyncStorage.getItem('pendingData');
@@ -18,7 +20,8 @@ const test = async () => {
   // UsageStats.getAppsIcon(arr.toString(), (data) => {
   //   console.log(data);
   // });
-  
+  // getScore();
+  // AsyncStorage.removeItem('score');
 }
 
 export default test;

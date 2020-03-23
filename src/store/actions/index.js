@@ -13,9 +13,21 @@ export {
   authSuccess,
   signout,
   autoSignin,
-  postProfile
+  postProfile,
+  onSignout
 } from './auth';
 
 export {
-  switchOp
+  switchOp,
+  resetSwitch
 } from './switchNavigator';
+
+export {
+  fetchStats,
+  cleanStats
+} from './stats';
+
+export {
+  getScore,
+  setScore
+} from './score';

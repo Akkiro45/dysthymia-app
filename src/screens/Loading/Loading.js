@@ -19,6 +19,7 @@ class Loading extends Component {
   }
 
   moveScreen = (auth) => {
+    this.props.onSwitchOp('tabs', true);
     if(auth) {
       if(auth.token) {
         if(auth.data.profile) {

@@ -103,7 +103,7 @@ class Activity extends Component {
     }
     return (
       <View style={style.container} >
-        <TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={this.props.onPress} >
           <View style={{ flex: 1 }} >
             <View style={style.header}>
               <Text text='Activity' type='h5' style={{ color: BLUE, fontFamily: 'Rubik-Medium' }} />

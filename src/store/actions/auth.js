@@ -2,7 +2,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import axios from '../../../axios';
 import { AUTH_SUCCESS, SIGNOUT } from './actionTypes';
-import { startLoading, stopLoading, setError, switchOp } from './index';
+import { startLoading, stopLoading, setError, switchOp, resetSwitch } from './index';
+import Heartbeat from '../../../Heartbeat';
 
 export const authSuccess = (data) => {
   return {
@@ -17,6 +18,24 @@ export const signout = () => {
   }
 }
 
+export const onSignout = (token) => {
+  return dispatch => {
+    AsyncStorage.removeItem('auth');
+    const headers = {
+      'x-auth': token
+    }
+    axios.delete('/user/signout', { headers })
+      .then(() => {
+        console.log('Signout');
+      })
+      .catch(() => {
+        console.log('Not Signout');
+      });
+      dispatch(resetSwitch());
+      dispatch(signout());
+  }
+}
+
 export const auth = (data, isSignin, navigation) => {
   return dispatch => {
     dispatch(startLoading());
@@ -27,6 +46,7 @@ export const auth = (data, isSignin, navigation) => {
           token: res.headers['x-auth'],
           data: res.data.data
         } 
+        Heartbeat.startService();
         dispatch(authSuccess(data));
         AsyncStorage.setItem('auth', JSON.stringify(data));
         dispatch(stopLoading());

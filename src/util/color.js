@@ -16,3 +16,16 @@ export const GREEN_CHART = '#44cd40';
 export const BLUE_CHART = '#404fcd';
 export const YELLOW_CHART = '#ebd22f';
 export const PURPLE_CHART = '#c200fb';
+export const LIGHT_BLUE_CHART = '#ccc3e1';
+
+// Stacked Bar Chart
+export const STACKED_BAR_1 = '#dfe4ea';
+export const STACKED_BAR_2 = '#ced6e0';
+export const STACKED_BAR_3 = '#a4b0be';
+
+// Score Levels Color
+export const LEVEL1 = '#44cd40';
+export const LEVEL2 = '#404fcd';
+export const LEVEL3 = '#fed526';
+export const LEVEL4 = '#ff5e00';
+export const LEVEL5 = '#e82629';

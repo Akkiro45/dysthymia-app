@@ -6,14 +6,19 @@ const upload = async () => {
   console.log('Upload Service!');    
 
   // oneTime();
+  try {
+    
+    // // Preparing Data
+    prepareData();
+    
+    // // Sending Data
+    setTimeout(() => {
+      sendData();
+    }, 5000);
 
-  // // Preparing Data
-  prepareData();
-  
-  // // Sending Data
-  setTimeout(() => {
-    sendData();
-  }, 5000);
+  } catch(e) {
+    console.log(e);
+  }
 
 }
 

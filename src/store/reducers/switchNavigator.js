@@ -1,4 +1,4 @@
-import { SWITCH_OP } from '../actions/actionTypes';
+import { SWITCH_OP, RESET_SWITCH } from '../actions/actionTypes';
 
 const initState = {
   loading: true,
@@ -11,6 +11,7 @@ const initState = {
 const reducer = (state=initState, action) => {
   switch(action.type) {
     case SWITCH_OP: return { ...state, [action.stackName]: action.value };
+    case RESET_SWITCH: return { ...state, ...initState, tabs: false};
     default: return state;
   }
 } 

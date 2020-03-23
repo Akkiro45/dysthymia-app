@@ -90,7 +90,7 @@ class Home extends Component {
         }>
         {/* <Text style={style.title} >Dysthymia</Text> */}
         <Text style={[style.title, { fontFamily: 'Rubik-Regular' }]} >Dysthymia</Text>
-        <View style={style.buttonContainer} >
+        {/* <View style={style.buttonContainer} >
           <View style={style.button} >
             <Button onPress={() => Heartbeat.startService()} title='Start Service' />
           </View>
@@ -98,7 +98,7 @@ class Home extends Component {
             <Button onPress={() => Heartbeat.stopService()} title='Stop Service' />
           </View>
         </View>
-        {/* <View style={style.buttonContainer} >
+        <View style={style.buttonContainer} >
           <View style={style.button} >
             <Button onPress={this.onSignoutHandler} title='Logout' />
           </View>
