@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, View, StyleSheet, TouchableNativeFeedback, Dimensions } from 'react-native';
+import { ScrollView, View, StyleSheet, TouchableNativeFeedback, Dimensions, Image } from 'react-native';
 import { connect } from 'react-redux';
 import Emoji from 'react-native-emoji';
 import Icon from 'react-native-vector-icons/dist/Feather';
@@ -8,8 +8,12 @@ import Text from '../../components/UI/Text/Text';
 import { BLUE, GRAY2 } from '../../util/color';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import { SETTING, RIGHT_ARROW } from '../../util/icons';
+import Wave from '../../assets/Images/Profile-Wave.png';
+
+// import TestComp from '../../components/TestComp/TestComp';
 
 class Profile extends Component {
+
   getHeightString = (height) => {
     height = height.toString();
     return (height.charAt(0) + 'ft ' + height.slice(2) + 'in' );
@@ -30,7 +34,9 @@ class Profile extends Component {
     if(this.props.profile) {
       content = (
         <ScrollView style={{ backgroundColor: '#fff' }} >
-          <View style={style.headerShape} ></View>
+          <View style={style.headerShape} >
+            <Image source={Wave} />
+          </View>
           <View style={style.emoji} >
             <Emoji name={this.props.profile.profile.profileEmoji} style={{fontSize: 75}} />
           </View>
@@ -63,6 +69,11 @@ class Profile extends Component {
               <View style={style.divider} ></View>
             </View>
           </View>
+          <View style={{ width: '90%', alignSelf: 'center', marginBottom: 35 }} >
+            <Text text="Parents's/Guardian's Email Id" type='h6' style={{ color: BLUE, textAlign: 'left' }} />
+            <Text text={this.props.profile.profile.emailIds[0]} type='h5' style={{ textAlign: 'left', marginVertical: 5 }} numberOfLines={1} />
+            <View style={style.divider} ></View>
+          </View>
           <TouchableNativeFeedback onPress={this.props.navigation.openDrawer} >
             <View style={style.settingButton} >
               <View style={style.icon} >
@@ -76,6 +87,7 @@ class Profile extends Component {
               </View>
             </View>
           </TouchableNativeFeedback>
+          {/* <TestComp /> */}
         </ScrollView>
       );
     } else {
@@ -96,7 +108,7 @@ const style = StyleSheet.create({
   headerShape: {
     width: '100%',
     height: 180,
-    backgroundColor: BLUE,
+    // backgroundColor: BLUE,
     zIndex: 0,
     marginBottom: 60
   },
@@ -111,8 +123,8 @@ const style = StyleSheet.create({
     left: (Dimensions.get('screen').width / 2) - 60,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: BLUE
+    // borderWidth: 1,
+    // borderColor: BLUE
   },
   title: {
     marginVertical: 35,

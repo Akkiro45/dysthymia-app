@@ -1,6 +1,5 @@
 import { PermissionsAndroid, NativeModules } from 'react-native';
 import moment from 'moment';
-
 const { CallLogs } = NativeModules;
 
 const filterCallLogs = (logs, time) => {
@@ -52,31 +51,49 @@ const filterCallLogs = (logs, time) => {
 
 const getCallLogsStats = (time) => {
   return new Promise((resolve, reject) => {
-    PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.READ_CALL_LOG,
-      {
-        title: 'Dysthymia',
-        message: 'Access your call logs',
-        buttonNeutral: 'Ask Me Later',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-      }
-    )
-      .then(granted  => {
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          CallLogs.load(100)
-            .then(logs => {
-              resolve(filterCallLogs(logs, time));
-            });
-        } else {
-          reject(false);
-          // reject('Call Log permission denied!');
-        }
+    CallLogs.load(100)
+      .then(logs => {
+        resolve(filterCallLogs(logs, time));
       })
       .catch(e => {
         reject(false);
-        // reject('Call Log permission denied!');
       });
+    // PermissionsAndroid.request(
+    //   PermissionsAndroid.PERMISSIONS.READ_CALL_LOG,
+    //   {
+    //     title: 'Dysthymia',
+    //     message: 'Access your call logs',
+    //     buttonNeutral: 'Ask Me Later',
+    //     buttonNegative: 'Cancel',
+    //     buttonPositive: 'OK',
+    //   }
+    // )
+    //   .then(granted  => {
+    //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+    //       CallLogs.load(100)
+    //         .then(logs => {
+    //           resolve(filterCallLogs(logs, time));
+    //         });
+    //     } else {
+    //       // reject('Call Log permission denied!');
+    //       const data = {
+    //         time: new Date().getTime(),
+    //         error: 'Due to permission'
+    //       }
+    //       AsyncStorage.setItem('callLogsError', JSON.stringify(data));
+    //       reject(false);
+    //     }
+    //   })
+    //   .catch(e => {
+    //     const data = {
+    //       time: new Date().getTime(),
+    //       error: e
+    //     }
+    //     AsyncStorage.setItem('callLogsError', JSON.stringify(data));
+    //     console.log(e);
+    //     reject(false);
+    //     // reject('Call Log permission denied!');
+    //   });
   });
 }
 

@@ -24,8 +24,9 @@ const scoreBoard = (props) => {
   });
   return (
     <View style={style.container} >
-      <Text text={LEVELS[currLevel].msg1} type='h5' style={{ textAlign: 'left', fontFamily: 'Rubik-Light' }} />
-      <Text text={LEVELS[currLevel].msg2} type='h5' style={{ textAlign: 'left', fontFamily: 'Rubik-Light' }} />
+      <Text text={LEVELS[currLevel].msg1} type='h5' style={{ textAlign: 'left', fontFamily: 'Rubik-Light', fontSize: 18 }} />
+      <Text text={LEVELS[currLevel].msg2} type='h5' style={{ textAlign: 'left', fontFamily: 'Rubik-Light', fontSize: 18 }} />
+      <Text text={props.startDay + ' - ' + props.endDay} style={{ marginTop: 30 }} />
       <View style={{ alignItems: 'center', marginVertical: 40 }} > 
         <AnimatedCircularProgress
           size={220}

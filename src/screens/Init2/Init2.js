@@ -33,6 +33,7 @@ class Init2 extends Component {
           <View style={[style.box, { backgroundColor: PURPLE }]} ></View>
           <View style={[style.box, { backgroundColor: PURPLE }]} ></View>
           <View style={style.box} ></View>
+          <View style={style.box} ></View>
         </View>
         <View style={style.body}>
           <View style={style.emojis}>
@@ -87,7 +88,7 @@ const style = StyleSheet.create({
   },
   box: {
     backgroundColor: LIGHT_PURPLE,
-    width: '30%',
+    width: '20%',
     height: 12,
     marginHorizontal: 5
   },

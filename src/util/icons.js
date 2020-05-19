@@ -29,3 +29,6 @@ export const GRID = 'nav-icon-grid';
 // Entypo
 export const TRIANGLE_DOWN = 'triangle-down';
 export const TRIANGLE_UP = 'triangle-up';
+
+// MaterialIcons
+export const FEEDBACK = 'speaker-notes';

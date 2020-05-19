@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-import axios from '../../../axios';
+import axios from '../../../ml-axios';
 
 import { SET_SCORE } from './actionTypes';
 import { startLoading, stopLoading, setError } from './index';
@@ -15,7 +15,7 @@ export const setScore = (score, time, startDay, endDay) => {
   }
 }
 
-export const storeScore = (scoreDigit, startDay, endDay) => {
+export const storeScore = (scoreDigit, startDay, endDay, time) => {
   AsyncStorage.getItem('score')
     .then(score => {
       score = JSON.parse(score);
@@ -30,6 +30,9 @@ export const storeScore = (scoreDigit, startDay, endDay) => {
       score.score = scoreDigit;
       score.startDay = startDay;
       score.endDay = endDay;
+      if(time) {
+        score.time = time;
+      }
       AsyncStorage.setItem('score', JSON.stringify(score));
     })  
     .catch(e => {
@@ -43,13 +46,12 @@ export const getScore = (token) => {
       'x-auth': token
     }
     dispatch(startLoading());
-    axios.get(`/score/?fromUser=1`, { headers })
+    axios.get(`/?fromUser=1`, { headers })
       .then(response => {
-        // console.log(response);
         if(response) {
           if(response.data.status === 'ok') {
             dispatch(setScore(response.data.score, response.data.initialTime, response.data.startDay, response.data.endDay));
-            storeScore(response.data.score, response.data.startDay, response.data.endDay);
+            storeScore(response.data.score, response.data.startDay, response.data.endDay, response.data.initialTime);
             dispatch(stopLoading());  
           } else {
             throw new Error('Error!');

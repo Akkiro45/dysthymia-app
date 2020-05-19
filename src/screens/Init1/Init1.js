@@ -14,6 +14,11 @@ class Init1 extends Component {
   state = {
     gender: null
   }
+  componentDidMount() {
+    if(this.props.route.params.redirect) {
+      this.props.navigation.navigate('Init4', { data: {} });
+    }
+  }
   onPressCard = (gender) => {
     this.setState({ gender });
   }
@@ -34,6 +39,7 @@ class Init1 extends Component {
         />
         <View style={style.header}>
           <View style={[style.box, { backgroundColor: PURPLE }]} ></View>
+          <View style={style.box} ></View>
           <View style={style.box} ></View>
           <View style={style.box} ></View>
         </View>
@@ -102,7 +108,7 @@ const style = StyleSheet.create({
   },
   box: {
     backgroundColor: LIGHT_PURPLE,
-    width: '30%',
+    width: '20%',
     height: 12,
     marginHorizontal: 5
   },

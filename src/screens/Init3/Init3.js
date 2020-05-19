@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, StyleSheet, TouchableNativeFeedback } from 'react-native';
 import { WheelPicker } from "react-native-wheel-picker-android";
 import { Dialog } from 'react-native-simple-dialogs';
-import { connect } from 'react-redux';
 
 import { PURPLE, LIGHT_PURPLE, GRAY2 } from '../../util/color';
 import Button from '../../components/UI/RoundedButton/RoundedButton';
@@ -10,9 +9,6 @@ import Text from '../../components/UI/Text/Text';
 import { height, weight } from '../../util/heightAndWeight';
 import { month, year, getDays } from '../../util/date';
 import { convHeightStrToFootInt } from '../../util/util';
-import { resetError, setError, postProfile } from '../../store/actions/index';
-import ErrorBox from '../../components/UI/ErrorBox/ErrorBox';
-import ProgressBox from '../../components/UI/ProgressBox/ProgressBox';
 
 class Init3 extends Component {
   state = {
@@ -39,7 +35,7 @@ class Init3 extends Component {
         weight: parseInt(weight[this.state.weight].substring(0, weight[this.state.weight].length - 3)),
         height: convHeightStrToFootInt(height[this.state.height])
       }
-      this.props.onPostProfile(data, this.props.token, this.props.navigation);
+      this.props.navigation.navigate('Init4', { data });
     } else {
       this.props.onSetError('Please select all the fields!');
     }
@@ -118,16 +114,6 @@ class Init3 extends Component {
     }
     return (
       <View style={style.container} >
-        <ProgressBox 
-          visible={this.props.loading !== null ? this.props.loading : false}
-          title="Creating your profile"
-          message="Please, wait..."
-        />
-        <ErrorBox 
-          visible={this.props.error ? true : false}
-          message={this.props.error}
-          onTouchOutside={this.props.onResetError}
-        />
         <Dialog
           visible={this.state.show}
           animationType={'fade'}
@@ -140,6 +126,7 @@ class Init3 extends Component {
           <View style={[style.box, { backgroundColor: PURPLE }]} ></View>
           <View style={[style.box, { backgroundColor: PURPLE }]} ></View>
           <View style={[style.box, { backgroundColor: PURPLE }]} ></View>
+          <View style={style.box} ></View>
         </View>
         <View style={style.body}>
           <View style={style.title} >
@@ -213,7 +200,7 @@ const style = StyleSheet.create({
   },
   box: {
     backgroundColor: LIGHT_PURPLE,
-    width: '30%',
+    width: '20%',
     height: 12,
     marginHorizontal: 5
   },
@@ -255,20 +242,4 @@ const style = StyleSheet.create({
   }
 });
 
-const mapStateToProps = state => {
-  return {
-    loading: state.loading.loading,
-    error: state.error.error,
-    token: state.auth.token
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onResetError: () => dispatch(resetError()),
-    onSetError: (error) => dispatch(setError(error)),
-    onPostProfile: (data, token, navigation) => dispatch(postProfile(data, token, navigation))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Init3);
+export default Init3;

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.content.Intent;
 
 import com.bgservice.sensors.SensorManagerPackage;
+// import com.bgservice.pushnotification.PushNotificationPackage;
 
 
 public class MainApplication extends Application implements ReactApplication {
@@ -34,6 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
           packages.add(new ModulesPackage());
           packages.add(new CallLogPackage());
           packages.add(new SensorManagerPackage());
+          packages.add(new PushNotificationPackage());
           return packages;
         }
 

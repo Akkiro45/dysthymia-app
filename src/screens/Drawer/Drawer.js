@@ -35,6 +35,13 @@ class Drawer extends Component {
         />
         <View style={style.divider} ></View>
           <DrawerItem
+            label='Logs'
+            onPress={() => {
+              this.props.navigation.navigate('Logs');
+            }}
+          />
+        <View style={style.divider} ></View>
+          <DrawerItem
             label='Old Version'
             onPress={() => {
               this.props.navigation.navigate('Home');

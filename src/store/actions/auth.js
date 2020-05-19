@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import axios from '../../../axios';
 import { AUTH_SUCCESS, SIGNOUT } from './actionTypes';
-import { startLoading, stopLoading, setError, switchOp, resetSwitch } from './index';
+import { startLoading, stopLoading, setError, switchOp, resetSwitch, setScore } from './index';
 import Heartbeat from '../../../Heartbeat';
 
 export const authSuccess = (data) => {
@@ -21,6 +21,7 @@ export const signout = () => {
 export const onSignout = (token) => {
   return dispatch => {
     AsyncStorage.removeItem('auth');
+    AsyncStorage.removeItem('score');
     const headers = {
       'x-auth': token
     }
@@ -31,6 +32,7 @@ export const onSignout = (token) => {
       .catch(() => {
         console.log('Not Signout');
       });
+      dispatch(setScore(null, null, null, null));
       dispatch(resetSwitch());
       dispatch(signout());
   }
@@ -52,12 +54,20 @@ export const auth = (data, isSignin, navigation) => {
         dispatch(stopLoading());
         if(data.data.profile) {
           if(data.data.profile.profileEmoji) {
-            navigation.navigate('Tabs');
+            if(data.data.profile.emailIds) {
+              if(data.data.profile.emailIds.length > 0) {
+                navigation.navigate('Tabs');
+              } else {
+                navigation.navigate('Init', { redirect: true });  
+              }
+            } else {
+              navigation.navigate('Init', { redirect: true });
+            }
           } else {
-            navigation.navigate('Init');
+            navigation.navigate('Init', { redirect: false });
           }
         } else {
-          navigation.navigate('Init');
+          navigation.navigate('Init', { redirect: false });
         }
         dispatch(switchOp('auth', false));
       })

@@ -32,7 +32,17 @@ const prepareData = () => {
                         time.startTime = parseInt(moment().startOf('day').format('x'));
                         time.endTime = parseInt(moment().endOf('day').format('x'));
                         AsyncStorage.setItem('time', JSON.stringify(time));
+                        AsyncStorage.setItem('setDataTime', new Date().getTime().toString());
                       });
+                  })
+                  .catch(er => {
+                    console.log('ERROR!');
+                    console.log(er);
+                    const obj = {
+                      time: new Date().getTime(),
+                      error: 'Error while preparing data!'
+                    }
+                    AsyncStorage.setItem('uploadError', JSON.stringify(obj));
                   });
               } else {
                 strData = JSON.stringify([]);
@@ -49,6 +59,7 @@ const prepareData = () => {
       }
     })
     .catch(e => {
+      console.log('ERROR2');
       console.log(e);
     });
 }

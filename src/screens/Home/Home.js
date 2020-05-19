@@ -27,6 +27,12 @@ class Home extends Component {
         score = JSON.parse(score);
         if(score.score) {
           this.props.onSetScore(score.score, null, score.startDay, score.endDay);
+        } else if(score.time) {
+          if(new Date().getTime() < score.time) {
+            this.props.onSetScore(score.score, score.time, score.startDay, score.endDay);
+          } else {
+            this.getScore();  
+          }
         } else {
           this.getScore();
         }
@@ -65,16 +71,20 @@ class Home extends Component {
     } else if(this.props.score) {
       if(this.props.score.score) {
         ren = (
-          <ScoreBoard score={this.props.score.score} onPress={this.getScore} />
+          <ScoreBoard 
+            score={this.props.score.score} 
+            startDay={this.props.score.startDay}
+            endDay={this.props.score.endDay}
+            onPress={this.getScore} />
         );
-      } else {
+      } else if(this.props.score.time) {
         ren = (
           <View style={{ marginTop: Dimensions.get('screen').height / 7 }} >
             <Spinner isVisible type='Pulse' style={{ alignSelf: 'center', marginBottom: 30 }} />
             <Text text='Score will be Available After' type='h5' style={{ marginBottom: 15 }} />
             <CountDown
               until={this.props.score.time ? ((this.props.score.time - new Date().getTime()) / 1000) : (60 * 60)}
-              onFinish={() => alert('finished')}
+              onFinish={this.getScore}
               size={30}
               digitStyle={{ backgroundColor: LIGHT_BLUE_CHART }}
               digitTxtStyle={{ color: BLUE }}

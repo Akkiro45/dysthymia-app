@@ -7,6 +7,7 @@ const UsageStats = NativeModules.UsageStats;
 import { getObjByDate, generateLightData, generateActivityData, generateKeysByHalfHoure } from './src/Upload/util';
 
 import getScore from './src/Upload/getScore';
+import upload from './src/Upload/upload';
 
 const test = async () => {
   // const time = await AsyncStorage.getItem('auth');
@@ -22,6 +23,25 @@ const test = async () => {
   // });
   // getScore();
   // AsyncStorage.removeItem('score');
+
+  AsyncStorage.getItem('lastCalled')
+    .then(lastCalled => {
+      if(lastCalled) {
+        lastCalled = moment(parseInt(lastCalled)).format('dddd, MMMM Do YYYY, h:mm:ss a');
+        console.log(lastCalled);
+      }
+    })
+  AsyncStorage.getItem('uploadError')
+    .then(uploadError => {
+      console.log(JSON.parse(uploadError))
+      if(uploadError) {
+        uploadError = JSON.parse(uploadError);
+        // this.setState({ error: uploadError.error, lastErrorTime: moment(parseInt(uploadError.time)).format('dddd, MMMM Do YYYY, h:mm:ss a') });
+        console.log('error');
+        console.log(moment(parseInt(uploadError.time)).format('dddd, MMMM Do YYYY, h:mm:ss a'))
+        console.log(uploadError.error)
+      }
+    })
 }
 
 export default test;

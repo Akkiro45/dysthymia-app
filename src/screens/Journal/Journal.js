@@ -7,7 +7,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { NativeModules } from 'react-native';
 const UsageStats = NativeModules.UsageStats;
 
-import Heartbeat from '../../../Heartbeat';
 import getCallLogsStats from '../../services/CallLogs';
 import getUsageStats from '../../services/UsageStats';
 
@@ -36,9 +35,7 @@ class Journal extends Component {
     activities: null
   }
   componentDidMount() {
-    // Heartbeat.startService();
     this.getStats();
-    // this.props.navigation.popToTop();
   }
   onRefresh = () => {
     this.getStats();
@@ -97,14 +94,18 @@ class Journal extends Component {
   }
   getIcon = (appName) => {
     const arr = [appName];
-    try {
-      UsageStats.getAppsIcon(arr.toString(), (data) => {
-        this.setState({ appIcon: data[appName] });
-      });
-    } catch(e) {
-      this.setState({ appIcon: null });
-      console.log(e);
-    }
+    return new Promise((resolve, reject) => {
+      try {
+        UsageStats.getAppsIcon(arr.toString(), (data) => {
+          this.setState({ appIcon: data[appName] });
+          resolve();
+        });
+      } catch(e) {
+        this.setState({ appIcon: null });
+        // console.log(e);
+        resolve();
+      }
+    });
   }
   getStats = () => {
     const currTime = new Date().getTime();
@@ -175,7 +176,9 @@ class Journal extends Component {
                 }
               });
               appUsage = minToTime(time);
-              this.getIcon(name);
+              this.getIcon(name)
+                .then(() => {})
+                .catch(() => {});
               // appIcon = res[3][name];
             }
 

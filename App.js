@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { Component } from 'react';
+import { StatusBar, SafeAreaView, PermissionsAndroid, ToastAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -20,11 +21,13 @@ import SigninScreen from './src/screens/Signin/Signin';
 import Init1Screen from './src/screens/Init1/Init1';
 import Init2Screen from './src/screens/Init2/Init2';
 import Init3Screen from './src/screens/Init3/Init3';
+import Init4Screen from './src/screens/Init4/Init4';
 import Welcome2Screen from './src/screens/Welcome2/Welcome2';
 import JournalScreen from './src/screens/Journal/Journal';
 import ProfileScreen from './src/screens/Profile/Profile';
 import DrawerContent from './src/screens/Drawer/Drawer';
 import HomeScreen from './src/screens/Home/Home';
+import LogsSreen from './src/screens/Logs/Logs';
 
 import UnlockCounterScreen from './src/screens/Stats/UnlockCounter/UnlockCounter';
 import NotificationCounterScreen from './src/screens/Stats/NotificationCounter/NotificationCounter';
@@ -44,11 +47,12 @@ const authStack = () => (
 );
 
 const InitStack = createStackNavigator();
-const initStack = () => (
+const initStack = (props) => (
   <InitStack.Navigator headerMode='none' >
-    <InitStack.Screen name="Init1" component={Init1Screen} />
+    <InitStack.Screen name="Init1" component={Init1Screen} initialParams={props.route.params} />
     <InitStack.Screen name="Init2" component={Init2Screen} />
     <InitStack.Screen name="Init3" component={Init3Screen} />
+    <InitStack.Screen name="Init4" component={Init4Screen} />
   </InitStack.Navigator>
 );
 
@@ -80,6 +84,7 @@ const drawerNavigator = () => (
   <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
     <Drawer.Screen name="Profile" component={ProfileScreen} />
     <Drawer.Screen name="Home" component={Home} />
+    <Drawer.Screen name="Logs" component={LogsSreen} />
   </Drawer.Navigator>
 );
 
@@ -111,11 +116,11 @@ const tabs = () => (
       inactiveTintColor: 'gray'
     }}
     initialRouteName='Home'
-  > 
-    <Tab.Screen name="Home" component={HomeScreen} />
+  >
     <Tab.Screen name="Journal" component={journalStack} options={({ route }) => ({
       tabBarVisible: tabBarVisibility(route)
     })} />
+    <Tab.Screen name="Home" component={HomeScreen} />
     <Tab.Screen name="Profile" component={drawerNavigator} />
   </Tab.Navigator>
 );
@@ -125,18 +130,43 @@ const Stack = createStackNavigator();
 class App extends Component {
   componentDidMount() {
     this.props.onAutoSignin();
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.READ_CALL_LOG,
+      {
+        title: 'Dysthymia',
+        message: 'Access your call logs',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      }
+    )
+    .then((granted) => {
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        ToastAndroid.show('Please provide Call Logs permission to work the app!', ToastAndroid.SHORT);
+      }
+    })
+    .catch((er) => {
+      // console.log(er)
+    });
   }
   render() {
     return (
-      <NavigationContainer>
-        <Stack.Navigator headerMode='none' >
-          {this.props.stacks.loading ? <Stack.Screen name="Loading" component={LoadingScreen} /> : null}
-          {this.props.stacks.auth ? <Stack.Screen name="Auth" component={authStack} /> : null}
-          {this.props.stacks.welcome2 ? <InitStack.Screen name="Welcome2" component={Welcome2Screen} /> : null}
-          {this.props.stacks.init ? <Stack.Screen name="Init" component={initStack} /> : null}
-          {this.props.stacks.tabs ? <Stack.Screen name="Tabs" component={tabs} /> : null }
-        </Stack.Navigator>
-      </NavigationContainer>
+      <SafeAreaView style={{ flex: 1 }} >
+        <StatusBar 
+          backgroundColor={PURPLE}
+          barStyle='light-content'
+          translucent={false}
+        />
+        <NavigationContainer>
+          <Stack.Navigator headerMode='none' >
+            {this.props.stacks.loading ? <Stack.Screen name="Loading" component={LoadingScreen} /> : null}
+            {this.props.stacks.auth ? <Stack.Screen name="Auth" component={authStack} /> : null}
+            {this.props.stacks.welcome2 ? <InitStack.Screen name="Welcome2" component={Welcome2Screen} /> : null}
+            {this.props.stacks.init ? <Stack.Screen name="Init" component={initStack} /> : null}
+            {this.props.stacks.tabs ? <Stack.Screen name="Tabs" component={tabs} /> : null }
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaView>
     );
   }
 } 

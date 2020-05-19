@@ -1,11 +1,14 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import NetInfo from "@react-native-community/netinfo";
+// import NetInfo from "@react-native-community/netinfo";
 
 import axios from '../../axios';
 
 const sendData = () => {
-  NetInfo.fetch().then(state => {
-    if(state.isInternetReachable) {
+  // console.log('In send Data');
+  // NetInfo.fetch().then(state => {
+  //   console.log('Checking internet');
+  //   if(state.isInternetReachable) {
+  //     console.log('Net is reachable');
       let strData;
       AsyncStorage.getItem('pendingData') 
         .then(pendingData => {
@@ -30,11 +33,13 @@ const sendData = () => {
                               pendingData.shift();
                               strData = JSON.stringify(pendingData);
                               AsyncStorage.setItem('pendingData', strData);
+                              AsyncStorage.setItem('sendTime', new Date().getTime().toString());
                             }
                           }
                         }
                       })
                       .catch(err => {
+                        console.log(err);
                         console.log(err.response);
                       });
                   }
@@ -48,8 +53,11 @@ const sendData = () => {
         .catch(e => {
           console.log(e);
         });
-    }
-  });
+  //   }
+  // })
+  // .catch(err => {
+  //   console.log(err);
+  // })
 }
 
 export default sendData;

@@ -24,12 +24,20 @@ class Loading extends Component {
       if(auth.token) {
         if(auth.data.profile) {
           if(auth.data.profile.profileEmoji) {
-            this.props.navigation.navigate('Tabs');
+            if(auth.data.profile.emailIds) {
+              if(auth.data.profile.emailIds.length > 0) {
+                this.props.navigation.navigate('Tabs');
+              } else {
+                this.props.navigation.navigate('Init', { redirect: true });  
+              }
+            } else {
+              this.props.navigation.navigate('Init', { redirect: true });
+            }
           } else {
-            this.props.navigation.navigate('Init');
+            this.props.navigation.navigate('Init', { redirect: false });
           }
         } else {
-          this.props.navigation.navigate('Init');
+          this.props.navigation.navigate('Init', { redirect: false });
         }
       } else {
         this.props.navigation.navigate('Auth');
