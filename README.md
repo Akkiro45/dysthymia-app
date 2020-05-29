@@ -1,5 +1,5 @@
 # dysthymia-app
-**Depression detection android app's depression score generation server.**
+**Depression detection android app.**
 </br>
 Dysthymia android app detect depression of mobile phone user by tracking acivities and behaviour from user's mobile phone usage.
 </br>
