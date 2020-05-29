@@ -14,6 +14,7 @@ It also shows user's all data in chart to user, such as unlocks, app usage, step
   * React redux
   * Activity recognition
   * Headless js
+  * React-native-chart-kit
 
 ## Screenshots
 <p align='center' >
