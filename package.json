@@ -21,7 +21,7 @@
     "axios": "^0.19.2",
     "moment": "^2.24.0",
     "react": "16.9.0",
-    "react-native": "0.61.5",
+    "react-native": "0.62.3",
     "react-native-activity-recognition": "^3.2.0",
     "react-native-android-notification-listener": "^1.0.4",
     "react-native-chart-kit": "^5.1.1",
