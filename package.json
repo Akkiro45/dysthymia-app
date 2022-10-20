@@ -32,7 +32,7 @@
     "react-native-material-textfield": "^0.16.1",
     "react-native-pie": "^1.1.2",
     "react-native-progress": "^4.0.3",
-    "react-native-reanimated": "^1.7.0",
+    "react-native-reanimated": "^2.10.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.0.0-beta.10",
     "react-native-simple-dialogs": "^1.2.1",
